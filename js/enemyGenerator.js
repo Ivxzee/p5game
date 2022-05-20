@@ -5,8 +5,8 @@ function generateEnemies(){
         let wt = w.type;
         let et = entityType[wt];
 
-        let a = new Entity(map(w.x,0,100,0,width),map(w.y,0,100,0,height),et.color,et.speed,et.hp,et.fireDelay,et.bulletSpeed, false)
-        enemies.push(a);
+        let a = new Entity(map(w.x,0,100,0,width),map(w.y,0,100,0,height),et.color,et.speed,et.hp,et.fireDelay,et.bulletSpeed,et.inaccuracy, false)
+        entities.push(a);
     }
 }
 

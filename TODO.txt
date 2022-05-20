@@ -2,7 +2,7 @@ Interrupts              //
 Asteroid like wall checks
 Fire delay              //
 Add enemies             //
-    Enemy behaviout
+    Enemy behaviout     //
     Waves of enemies    //
 
 
@@ -13,3 +13,14 @@ Enemies:
     Shooting
     Herd
     Boss?
+
+COLLISIONS
+    Bullets //
+    Enemies
+    Walls
+
+SHOOTING
+    Randomness      //
+    Fire Rate       //
+    Bullet speed    //
+    Bullet amount
