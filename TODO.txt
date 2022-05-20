@@ -1,0 +1,15 @@
+Interrupts              //
+Asteroid like wall checks
+Fire delay              //
+Add enemies             //
+    Enemy behaviout
+    Waves of enemies    //
+
+
+Waves as as objects //
+
+Enemies:
+    Quick   //
+    Shooting
+    Herd
+    Boss?
