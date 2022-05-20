@@ -2,7 +2,7 @@
 
 //A shared class for player(s)? and enemies
 class Entity {
-  constructor(x, y, color, speed, hp, fireDelay, bulletSpeed, isPlayer) {
+  constructor(x, y, color, speed, hp, fireDelay, bulletSpeed, inaccuracy, isPlayer) {
     this.x = x;
     this.y = y;
     this.color = color;
@@ -10,10 +10,11 @@ class Entity {
     this.hp = hp;
     this.fireDelay = fireDelay;
     this.bulletSpeed = bulletSpeed;
+    this.inaccuracy = inaccuracy;
     this.isPlayer = isPlayer;
     //Array of bullet objects belonging to this object
     this.bulletArray = [];
-    this.target = player;
+    this.target = entities[0];
     //Used for keeping time, eg. for firing
     this.elapsedFrames = 0;
   }
@@ -21,8 +22,12 @@ class Entity {
   //Main function of the entity object, called every frame
     //Decides whether the entity should behave like a player or an enemy
     if (this.isPlayer === true) {
+      this.target = {x:mouseX, y:mouseY}
       this.control();
     } else {
+      //Entities [0] is the player object
+      this.target = entities[0];
+
       this.navigate();
     }
     this.drawAll();
@@ -57,15 +62,23 @@ class Entity {
   }
   navigate() {
   //Method made to apply behaviour to enemies
-    let dx = (player.x - this.x);
-    let dy = (player.y - this.y);
-
-    let sv = new p5.Vector(dx, dy);
-    this.y += (dy/sv.mag())*this.speed*random(-0.6,1.);
-    this.x += (dx/sv.mag())*this.speed*random(-0.6,1.8);
+    let dir = getDirectionNorm(this.target.x, this.target.y, this.x, this.y)
+    this.x += dir.x*this.speed*random(-0.6,1.8);
+    this.y += dir.y*this.speed*random(-0.6,1.8);
+    
+    if (this.elapsedFrames >= this.fireDelay){
+      this.shoot();
+      this.elapsedFrames = 0;
+    }
   }
   shoot() {
-    let b = new Bullet(this.x, this.y, 10, this, this.bulletSpeed);
+    //Gun kickback, basically
+    let offset = random(-this.inaccuracy, this.inaccuracy)
+    let dir = getDirectionNorm(this.target.x+offset, this.target.y+offset, this.x, this.y)
+    this.x -= dir.x*this.speed*random(-0.6,4);
+    this.y -= dir.y*this.speed*random(-0.6,4);
+
+    let b = new Bullet(this.x, this.y, 10, this, this.bulletSpeed, dir);
     this.bulletArray.push(b);
   }
   drawAll(){
@@ -83,3 +96,13 @@ class Entity {
     rectMode(CORNER);
   }
 }
+//Utility functions, not neccesarily just for entities
+function getDirectionNorm(x1, y1, x2, y2){
+  let dx = (x1 - x2);
+  let dy = (y1 - y2);
+  let v = new p5.Vector(dx, dy);
+  let dxn = dx/v.mag();
+  let dyn = dy/v.mag();
+
+  return({x:dxn, y:dyn})
+} 
